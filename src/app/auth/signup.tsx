@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator } from 're
 import { useRouter } from 'expo-router';
 import { supabase } from '../../lib/supabase';
 
-export default function Login() {
+export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -22,7 +22,6 @@ export default function Login() {
   }, []);
 
   const validateInputs = (): boolean => {
-    // Basic email regex
     const emailRegex = /^\S+@\S+\.\S+$/;
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email address.');
@@ -35,23 +34,23 @@ export default function Login() {
     return true;
   };
 
-  const handleLogin = async () => {
+  const handleSignup = async () => {
     setError('');
     if (!validateInputs()) return;
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signUp({ email, password });
     setLoading(false);
     if (error) {
       setError(error.message);
     } else {
-      // On success, redirect to the dashboard.
+      // On successful signup, you might want to require email verification or simply log in.
       router.replace('/dashboard');
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Sign Up</Text>
       {error ? <Text style={styles.errorText}>{error}</Text> : null}
       <TextInput
         placeholder="Email"
@@ -70,11 +69,11 @@ export default function Login() {
       {loading ? (
         <ActivityIndicator size="large" />
       ) : (
-        <Button title="Login" onPress={handleLogin} />
+        <Button title="Sign Up" onPress={handleSignup} />
       )}
       <Button
-        title="Go to Sign Up"
-        onPress={() => router.push('/auth/signup')}
+        title="Go to Login"
+        onPress={() => router.push('/auth/login')}
       />
     </View>
   );
