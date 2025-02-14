@@ -44,7 +44,7 @@ export default function Signup() {
     if (error) {
       setError(error.message);
     } else {
-      router.replace('/dashboard');
+      router.replace('/');
     }
   };
 
