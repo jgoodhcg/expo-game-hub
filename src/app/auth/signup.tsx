@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { supabase } from '../../lib/supabase';
 
@@ -10,10 +10,11 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Automatically redirect if a session exists.
   useEffect(() => {
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (session) {
         router.replace('/');
       }
@@ -43,45 +44,47 @@ export default function Signup() {
     if (error) {
       setError(error.message);
     } else {
-      // On successful signup, you might want to require email verification or simply log in.
       router.replace('/dashboard');
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
-      />
-      {loading ? (
-        <ActivityIndicator size="large" />
-      ) : (
-        <Button title="Sign Up" onPress={handleSignup} />
-      )}
-      <Button
-        title="Go to Login"
-        onPress={() => router.push('/auth/login')}
-      />
+    <View className="flex-1 justify-center items-center bg-gray-100 dark:bg-gray-800 p-6">
+      <View className="w-full max-w-md bg-white dark:bg-gray-700 p-8 rounded-xl shadow-md">
+        <Text className="text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+          Sign Up
+        </Text>
+        {error ? (
+          <Text className="text-red-500 mb-4 text-center">{error}</Text>
+        ) : null}
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          className="w-full bg-gray-50 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-xl py-3 px-4 mb-4 text-gray-900 dark:text-white"
+          placeholderTextColor="#888"
+        />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          className="w-full bg-gray-50 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-xl py-3 px-4 mb-6 text-gray-900 dark:text-white"
+          placeholderTextColor="#888"
+        />
+        {loading ? (
+          <ActivityIndicator size="large" color="#3b82f6" />
+        ) : (
+          <TouchableOpacity onPress={handleSignup} className="bg-blue-500 rounded-xl py-4 px-6 shadow-md mb-4">
+            <Text className="text-white text-center text-lg font-semibold">Sign Up</Text>
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity onPress={() => router.push('/auth/login')}>
+          <Text className="text-sm text-blue-500 underline text-center">Go to Login</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', padding: 16 },
-  title: { fontSize: 24, marginBottom: 16, textAlign: 'center' },
-  input: { height: 40, borderWidth: 1, marginBottom: 12, paddingHorizontal: 8 },
-  errorText: { color: 'red', marginBottom: 8, textAlign: 'center' },
-});
