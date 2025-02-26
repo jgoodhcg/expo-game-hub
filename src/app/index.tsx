@@ -28,11 +28,11 @@ export default function Dashboard() {
                     </View>
                     {/* Content area with game buttons */}
                     <View className="p-4 space-y-3">
-                        <Win95Button onPress={() => router.push('/game1')}>
+                        <Win95Button onPress={() => router.push('/games/hexfling')}>
                             <View className="flex-row items-center justify-center space-x-2">
                                 <FontAwesome5 name="th" size={20} color="#1a1a1a" />
                                 <Text className="font-mono text-lg text-gray-800 tracking-wide">
-                                    Falling Hexagon
+                                    HexFling
                                 </Text>
                             </View>
                         </Win95Button>
